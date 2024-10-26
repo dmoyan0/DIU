@@ -1,0 +1,24 @@
+.header {
+    background-color: #7F3E36; /* Color de la barra superior */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    color: white;
+  }
+  
+  .header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .header nav a {
+    color: white;
+    margin: 0 1rem;
+    text-decoration: none;
+  }
+  
+  .header .social-icons i {
+    margin-left: 0.5rem;
+  }
+  
