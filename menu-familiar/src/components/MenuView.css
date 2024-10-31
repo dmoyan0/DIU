@@ -9,6 +9,7 @@
   }
   
   .add-week-button,
+  .delete-week-button,
   .add-menu-button,
   .shopping-list-button {
     background-color: #b24e4e;
@@ -27,13 +28,23 @@
     padding: 15px;
     background-color: #ccc;
     border-radius: 20px;
-    margin: 10px 0;
+    margin: 5px 0;
     text-align: left;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  
+  .week-container {
+    display: flex;
+    gap: 20px; /* Space between columns */
+    margin: 0 10px;
+  }
+  .weekColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between weeks within each column */
+    margin: 0 10px;
+  }
   .add-week-button:hover,
   .add-menu-button:hover,
   .shopping-list-button:hover {
