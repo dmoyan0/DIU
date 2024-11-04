@@ -150,3 +150,38 @@
   .add-more-button:hover {
     background-color: #4cae4c;
   }
+
+  .shopping-list {
+    margin-top: 10px;
+    text-align: left;
+    max-height: 70vh; 
+    overflow-y: auto; 
+    padding-right: 10px;
+  }
+
+  .modal.shopping-list-modal {
+    width: 500px; 
+    max-width: 80%;
+    background-color: #444;
+    color: #fff;
+    padding: 30px;
+  }
+
+  .shopping-item {
+    margin-bottom: 15px;
+  }
+
+  .shopping-item strong {
+    color: #b24e4e; 
+    font-size: 1.1em;
+  }
+
+  .shopping-item ul {
+    margin: 5px 0 10px 20px; 
+    list-style-type: disc;
+  }
+
+  .modal-overlay .modal .close-modal-button {
+    background-color: #a43e3e;
+  }
+

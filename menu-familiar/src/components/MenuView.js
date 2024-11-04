@@ -4,11 +4,19 @@ import './MenuView.css';
 function MenuView() {
   const [semanas, setSemanas] = useState([{ id: 1, name: "Semana 1", menu: [] }]);
   const [showModal, setShowModal] = useState(false);
-  const [currentWeekId, setCurrentWeekId] = useState(null); // Track which week is being edited
+  const [showShoppingList, setShowShoppingList] = useState(false); // Estado para la lista de compras
+  const [currentWeekId, setCurrentWeekId] = useState(null); 
   const [menuOptions] = useState(['Arroz con pollo y ensalada', 'Lentejas con arroz', 'Tacos', 'Pasta']);
 
   const maxWeeks = 8;
   const weeksPerColumn = 4;
+
+  const ingredients = {
+    'Arroz con pollo y ensalada': ['Arroz', 'Pollo', 'Lechuga', 'Tomate', 'Aceite de oliva'],
+    'Lentejas con arroz': ['Lentejas', 'Arroz', 'Cebolla', 'Zanahoria', 'Pimiento rojo'],
+    'Tacos': ['Tortillas', 'Carne molida', 'Lechuga', 'Tomate', 'Queso'],
+    'Pasta': ['Pasta', 'Salsa de tomate', 'Queso parmesano', 'Albahaca', 'Ajo']
+  };
 
   const AgregarSemana = () => {
     const newWeekNumber = semanas.length + 1;
@@ -21,13 +29,13 @@ function MenuView() {
   };
 
   const openModal = (weekId) => {
-    setCurrentWeekId(weekId); // Set the current week being edited
+    setCurrentWeekId(weekId); 
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setCurrentWeekId(null); // Reset the current week
+    setCurrentWeekId(null); 
   };
 
   const selectMenuOption = (option) => {
@@ -54,6 +62,14 @@ function MenuView() {
   };
 
   const weekColumns = chunkWeeks(semanas, weeksPerColumn);
+
+  const openShoppingList = () => {
+    setShowShoppingList(true);
+  };
+
+  const closeShoppingList = () => {
+    setShowShoppingList(false);
+  };
 
   return (
     <div className="menu-view">
@@ -99,7 +115,7 @@ function MenuView() {
         ))}
       </div>
 
-      <button className="shopping-list-button">Obtener lista de compras</button>
+      <button className="shopping-list-button" onClick={openShoppingList}>Obtener lista de compras</button>
 
       {showModal && (
         <div className="modal-overlay">
@@ -116,6 +132,28 @@ function MenuView() {
           </div>
         </div>
       )}
+
+      {showShoppingList && (
+          <div className="modal-overlay">
+              <div className="modal shopping-list-modal">
+                  <h3>Lista de Compras</h3>
+                  <div className="shopping-list">
+                    {Array.from(new Set(semanas.flatMap(semana => semana.menu))).map((dish, index) => (
+                      <div key={index} className="shopping-item">
+                        <strong>{dish}</strong>
+                        <ul>
+                          {ingredients[dish].map((ingredient, idx) => (
+                            <li key={idx}>{ingredient}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="close-modal-button" onClick={closeShoppingList}>Cerrar</button>
+              </div>
+          </div>
+      )}
+
     </div>
   );
 }
