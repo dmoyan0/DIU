@@ -4,19 +4,19 @@ import './MenuView.css';
 function MenuView() {
   const [semanas, setSemanas] = useState([{ id: 1, name: "Semana 1", menu: [] }]);
   const [showModal, setShowModal] = useState(false);
-  const [showShoppingList, setShowShoppingList] = useState(false); // Estado para la lista de compras
+  const [showShoppingList, setShowShoppingList] = useState(false);
   const [currentWeekId, setCurrentWeekId] = useState(null); 
   const [menuOptions] = useState(['Arroz con pollo y ensalada', 'Lentejas con arroz', 'Tacos', 'Pasta']);
 
+  const ingredients = {
+    'Arroz con pollo y ensalada': ['Arroz', 'Pollo', 'Lechuga', 'Tomate'],
+    'Lentejas con arroz': ['Lentejas', 'Arroz', 'Cebolla', 'Ajo'],
+    'Tacos': ['Tortillas', 'Carne', 'Queso', 'Lechuga', 'Tomate'],
+    'Pasta': ['Pasta', 'Tomate', 'Queso', 'Aceite de oliva']
+  };
+
   const maxWeeks = 8;
   const weeksPerColumn = 4;
-
-  const ingredients = {
-    'Arroz con pollo y ensalada': ['Arroz', 'Pollo', 'Lechuga', 'Tomate', 'Aceite de oliva'],
-    'Lentejas con arroz': ['Lentejas', 'Arroz', 'Cebolla', 'Zanahoria', 'Pimiento rojo'],
-    'Tacos': ['Tortillas', 'Carne molida', 'Lechuga', 'Tomate', 'Queso'],
-    'Pasta': ['Pasta', 'Salsa de tomate', 'Queso parmesano', 'Albahaca', 'Ajo']
-  };
 
   const AgregarSemana = () => {
     const newWeekNumber = semanas.length + 1;
@@ -88,9 +88,14 @@ function MenuView() {
                 
                 {semana.menu.length > 0 ? (
                   <div className="selected-menu-list">
-                    {semana.menu.map((dish, index) => (
+                    {Object.entries(
+                      semana.menu.reduce((acc, dish) => {
+                        acc[dish] = (acc[dish] || 0) + 1;
+                        return acc;
+                      }, {})
+                    ).map(([dish, count], index) => (
                       <div key={index} className="selected-menu">
-                        <span>{dish}</span>
+                        <span>{dish}{count > 1 && ` x${count}`}</span>
                         <button className="delete-menu-button" onClick={() => removeMenuOption(semana.id, dish)}>
                           🗑️
                         </button>
@@ -134,26 +139,35 @@ function MenuView() {
       )}
 
       {showShoppingList && (
-          <div className="modal-overlay">
-              <div className="modal shopping-list-modal">
-                  <h3>Lista de Compras</h3>
-                  <div className="shopping-list">
-                    {Array.from(new Set(semanas.flatMap(semana => semana.menu))).map((dish, index) => (
-                      <div key={index} className="shopping-item">
-                        <strong>{dish}</strong>
-                        <ul>
-                          {ingredients[dish].map((ingredient, idx) => (
-                            <li key={idx}>{ingredient}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                  <button className="close-modal-button" onClick={closeShoppingList}>Cerrar</button>
-              </div>
+        <div className="modal-overlay">
+          <div className="modal shopping-list-modal">
+            <h3>Lista de Compras</h3>
+            <div className="shopping-list">
+              {semanas.map((semana) => (
+                <div key={semana.id} className="shopping-item">
+                  <h4>{semana.name}</h4>
+                  {Object.entries(
+                    semana.menu.reduce((acc, dish) => {
+                      acc[dish] = (acc[dish] || 0) + 1;
+                      return acc;
+                    }, {})
+                  ).map(([dish, count], index) => (
+                    <div key={index}>
+                      <strong>{dish}{count > 1 && ` x${count}`}</strong>
+                      <ul>
+                        {ingredients[dish].map((ingredient, idx) => (
+                          <li key={idx}>{ingredient}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <button className="close-modal-button" onClick={closeShoppingList}>Cerrar</button>
           </div>
+        </div>
       )}
-
     </div>
   );
 }
