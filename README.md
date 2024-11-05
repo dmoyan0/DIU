@@ -13,8 +13,6 @@ Este proyecto es una aplicación web para la planificación y gestión de menús
 - **Edición y personalización:** Ajusta los menús y platillos en cualquier momento según las preferencias de los usuarios.
 - **Interfaz intuitiva:** Navegación simplificada para una experiencia de usuario fluida.
 
-**Nota:** La funcionalidad de registro de usuarios aún no está implementada y no será incluida en la versión MVP presentada en este informe.
-
 ## Scripts Disponibles
 
 En el directorio del proyecto, puedes ejecutar los siguientes comandos:
