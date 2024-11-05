@@ -5,7 +5,8 @@ function MenuView() {
   const [semanas, setSemanas] = useState([{ id: 1, name: "Día 1", menu: [] }]);
   const [showModal, setShowModal] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
-  const [currentWeekId, setCurrentWeekId] = useState(null); 
+  const [showRecommendations, setShowRecommendations] = useState(false);
+  const [currentWeekId, setCurrentWeekId] = useState(1);  // Inicializamos en la primera semana
   const [menuOptions] = useState(['Arroz con pollo y ensalada', 'Lentejas con arroz', 'Tacos', 'Pasta']);
 
   const ingredients = {
@@ -22,10 +23,15 @@ function MenuView() {
     const newWeekNumber = semanas.length + 1;
     const newSemana = { id: newWeekNumber, name: `Día ${newWeekNumber}`, menu: [] };
     setSemanas([...semanas, newSemana]);
+    setCurrentWeekId(newWeekNumber);  // Actualiza la última semana creada como la actual
   };
 
   const eliminarSemana = (id) => {
     setSemanas(semanas.filter((semana) => semana.id !== id));
+    if (id === currentWeekId && semanas.length > 1) {
+      // Si se elimina la última semana, actualizar a la semana anterior
+      setCurrentWeekId(semanas[semanas.length - 2].id);
+    }
   };
 
   const openModal = (weekId) => {
@@ -38,11 +44,27 @@ function MenuView() {
     setCurrentWeekId(null); 
   };
 
+  const openRecommendations = () => {
+    setShowRecommendations(true);
+  };
+
+  const closeRecommendations = () => {
+    setShowRecommendations(false);
+  };
+
   const selectMenuOption = (option) => {
     setSemanas(semanas.map((semana) =>
       semana.id === currentWeekId ? { ...semana, menu: [...semana.menu, option] } : semana
     ));
     closeModal();
+  };
+
+  // Nueva función para agregar platillo de recomendaciones a la última semana modificada
+  const selectRecommendationOption = (option) => {
+    setSemanas(semanas.map((semana) =>
+      semana.id === currentWeekId ? { ...semana, menu: [...semana.menu, option] } : semana
+    ));
+    closeRecommendations();
   };
 
   const removeMenuOption = (weekId, option) => {
@@ -51,6 +73,7 @@ function MenuView() {
         ? { ...semana, menu: semana.menu.filter((dish) => dish !== option) }
         : semana
     ));
+    setCurrentWeekId(weekId);  // Actualiza la semana modificada
   };
 
   const chunkWeeks = (weeks, size) => {
@@ -139,6 +162,9 @@ function MenuView() {
 
       <button className="shopping-list-button" onClick={openShoppingList}>Obtener lista de compras</button>
 
+      {/* Botón de recomendaciones */}
+      <button className="recommendations-button" onClick={openRecommendations}>Recomendaciones</button>
+
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -151,6 +177,22 @@ function MenuView() {
               ))}
             </div>
             <button className="close-modal-button" onClick={closeModal}>Cerrar</button>
+          </div>
+        </div>
+      )}
+
+      {showRecommendations && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Recomendaciones:</h3>
+            <div className="menu-options">
+              {menuOptions.map((option, index) => (
+                <div key={index} className="menu-option" onClick={() => selectRecommendationOption(option)}>
+                  {option}
+                </div>
+              ))}
+            </div>
+            <button className="close-modal-button" onClick={closeRecommendations}>Cerrar</button>
           </div>
         </div>
       )}
