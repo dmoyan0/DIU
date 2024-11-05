@@ -16,9 +16,9 @@ function Header() {
       <nav>
         <Link to="/">Home</Link>
         <Link to="/menu">Seleccionar menú</Link>
-        <Link to="/">Acerca</Link>
-        <Link to="/">Iniciar sesión</Link>
-        <Link to="/">Registrarse</Link>
+        {/* <Link to="/">Acerca</Link> */}
+        {/* <Link to="/">Iniciar sesión</Link>
+        <Link to="/">Registrarse</Link> */}
       </nav>
       <div className="social-icons">
         <i className="fab fa-facebook"></i>

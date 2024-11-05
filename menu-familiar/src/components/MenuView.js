@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './MenuView.css';
 
 function MenuView() {
-  const [semanas, setSemanas] = useState([{ id: 1, name: "Semana 1", menu: [] }]);
+  const [semanas, setSemanas] = useState([{ id: 1, name: "Día 1", menu: [] }]);
   const [showModal, setShowModal] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [currentWeekId, setCurrentWeekId] = useState(null); 
@@ -15,12 +15,12 @@ function MenuView() {
     'Pasta': ['Pasta', 'Tomate', 'Queso', 'Aceite de oliva']
   };
 
-  const maxWeeks = 8;
-  const weeksPerColumn = 4;
+  const maxWeeks = 14;
+  const daysPerWeek = 7;
 
   const AgregarSemana = () => {
     const newWeekNumber = semanas.length + 1;
-    const newSemana = { id: newWeekNumber, name: `Semana ${newWeekNumber}`, menu: [] };
+    const newSemana = { id: newWeekNumber, name: `Día ${newWeekNumber}`, menu: [] };
     setSemanas([...semanas, newSemana]);
   };
 
@@ -61,7 +61,7 @@ function MenuView() {
     return result;
   };
 
-  const weekColumns = chunkWeeks(semanas, weeksPerColumn);
+  const weekColumns = chunkWeeks(semanas, daysPerWeek);
 
   const openShoppingList = () => {
     setShowShoppingList(true);
@@ -71,11 +71,28 @@ function MenuView() {
     setShowShoppingList(false);
   };
 
+  const getWeeklyShoppingList = () => {
+    return weekColumns.map((week, index) => {
+      const weeklyIngredients = week.reduce((acc, day) => {
+        day.menu.forEach(dish => {
+          ingredients[dish].forEach(ingredient => {
+            acc[ingredient] = (acc[ingredient] || 0) + 1;
+          });
+        });
+        return acc;
+      }, {});
+
+      return { weekNumber: index + 1, ingredients: weeklyIngredients };
+    });
+  };
+
+  const weeklyShoppingList = getWeeklyShoppingList();
+
   return (
     <div className="menu-view">
       {semanas.length < maxWeeks && (
         <button className="add-week-button" onClick={AgregarSemana}>
-          +Agregar Semana
+          +Agregar Día
         </button>
       )}
 
@@ -141,26 +158,16 @@ function MenuView() {
       {showShoppingList && (
         <div className="modal-overlay">
           <div className="modal shopping-list-modal">
-            <h3>Lista de Compras</h3>
+            <h3>Lista de Compras por Semana</h3>
             <div className="shopping-list">
-              {semanas.map((semana) => (
-                <div key={semana.id} className="shopping-item">
-                  <h4>{semana.name}</h4>
-                  {Object.entries(
-                    semana.menu.reduce((acc, dish) => {
-                      acc[dish] = (acc[dish] || 0) + 1;
-                      return acc;
-                    }, {})
-                  ).map(([dish, count], index) => (
-                    <div key={index}>
-                      <strong>{dish}{count > 1 && ` x${count}`}</strong>
-                      <ul>
-                        {ingredients[dish].map((ingredient, idx) => (
-                          <li key={idx}>{ingredient}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+              {weeklyShoppingList.map((week, index) => (
+                <div key={index} className="shopping-item">
+                  <h4>Semana {week.weekNumber}</h4>
+                  <ul>
+                    {Object.entries(week.ingredients).map(([ingredient, quantity], idx) => (
+                      <li key={idx}>{ingredient}: {quantity}</li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </div>
