@@ -1,75 +1,53 @@
-# Getting Started with Create React App
+# Menú Familiar - Aplicación de Planificación de Menús
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este proyecto es una aplicación web para la planificación y gestión de menús familiares semanales, desarrollada con [Create React App](https://github.com/facebook/create-react-app). Permite a los usuarios configurar menús para semanas múltiples, generar listas de compras automáticas basadas en los menús seleccionados y editar las opciones de menú de forma intuitiva.
 
 ## Autores
 - Diego Moyano
 - Rodrigo Vera
 - Luis Zegarra
 
-## Available Scripts
+## Características
+- **Planificación semanal de menús:** Configura menús para una o más semanas eligiendo entre una variedad de platillos.
+- **Lista de compras automática:** Generación de listas de compras a partir de los menús seleccionados.
+- **Edición y personalización:** Ajusta los menús y platillos en cualquier momento según las preferencias de los usuarios.
+- **Interfaz intuitiva:** Navegación simplificada para una experiencia de usuario fluida.
 
-In the project directory, you can run:
+**Nota:** La funcionalidad de registro de usuarios aún no está implementada y no será incluida en la versión MVP presentada en este informe.
+
+## Scripts Disponibles
+
+En el directorio del proyecto, puedes ejecutar los siguientes comandos:
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Inicia la aplicación en modo de desarrollo.\
+Abre [http://localhost:3000](http://localhost:3000) para verla en el navegador.
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Lanza el corredor de pruebas en modo interactivo.\
+Para más información sobre cómo ejecutar pruebas, consulta la [documentación de Create React App](https://facebook.github.io/create-react-app/docs/running-tests).
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Compila la aplicación para producción en la carpeta `build`.\
+La aplicación está lista para ser desplegada y los archivos están optimizados para mejor rendimiento.
 
 ### `npm run eject`
+**Nota:** Esta es una operación irreversible. Una vez que `eject` es ejecutado, no se puede revertir.\
+Este comando permite acceder a todas las configuraciones del proyecto (webpack, Babel, ESLint, etc.) si se requiere personalización avanzada.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Documentación adicional
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Para obtener más información sobre Create React App y aprender más sobre el desarrollo en React, consulta la [documentación oficial](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- [División de Código (Code Splitting)](https://facebook.github.io/create-react-app/docs/code-splitting)
+- [Analizando el tamaño del bundle](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- [Crear una Progressive Web App](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- [Configuración avanzada](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- [Despliegue](https://facebook.github.io/create-react-app/docs/deployment)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Solución de Problemas
+Si el comando `npm run build` falla en minificar, consulta la [guía de solución de problemas](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify).
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+¡Gracias por utilizar Menú Familiar! Esperamos que esta aplicación facilite tu planificación semanal de comidas.
