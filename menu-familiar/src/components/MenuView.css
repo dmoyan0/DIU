@@ -185,3 +185,17 @@
     background-color: #a43e3e;
   }
 
+  .recommendations-button {
+    background-color: #b24e4e;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 10px 0;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+.recommendations-button:hover {
+    background-color: #a43e3e;
+  }
