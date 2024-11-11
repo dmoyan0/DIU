@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
+import jsPDF from 'jspdf';
 import './MenuView.css';
 
 function MenuView() {
   const [semanas, setSemanas] = useState([{ id: 1, name: "Día 1", menu: [] }]);
   const [showModal, setShowModal] = useState(false);
+  const [showRecipeForm, setShowRecipeForm] = useState(false);
+  const [newRecipeName, setNewRecipeName] = useState('');
+  const [newIngredient, setNewIngredient] = useState('');
+  const [ingredientsList, setIngredientsList] = useState([]);
   const [showShoppingList, setShowShoppingList] = useState(false);
-  const [showRecommendations, setShowRecommendations] = useState(false);
-  const [currentWeekId, setCurrentWeekId] = useState(1);  // Inicializamos en la primera semana
-  const [menuOptions] = useState(['Arroz con pollo y ensalada', 'Lentejas con arroz', 'Tacos', 'Pasta']);
-
-  const ingredients = {
+  const [currentWeekId, setCurrentWeekId] = useState(1);
+  const [menuOptions, setMenuOptions] = useState(['Arroz con pollo y ensalada', 'Lentejas con arroz', 'Tacos', 'Pasta']);
+  const [ingredients, setIngredients] = useState({
     'Arroz con pollo y ensalada': ['Arroz', 'Pollo', 'Lechuga', 'Tomate'],
     'Lentejas con arroz': ['Lentejas', 'Arroz', 'Cebolla', 'Ajo'],
     'Tacos': ['Tortillas', 'Carne', 'Queso', 'Lechuga', 'Tomate'],
     'Pasta': ['Pasta', 'Tomate', 'Queso', 'Aceite de oliva']
-  };
+  });
 
   const maxWeeks = 14;
   const daysPerWeek = 7;
@@ -23,13 +26,12 @@ function MenuView() {
     const newWeekNumber = semanas.length + 1;
     const newSemana = { id: newWeekNumber, name: `Día ${newWeekNumber}`, menu: [] };
     setSemanas([...semanas, newSemana]);
-    setCurrentWeekId(newWeekNumber);  // Actualiza la última semana creada como la actual
+    setCurrentWeekId(newWeekNumber);
   };
 
   const eliminarSemana = (id) => {
     setSemanas(semanas.filter((semana) => semana.id !== id));
     if (id === currentWeekId && semanas.length > 1) {
-      // Si se elimina la última semana, actualizar a la semana anterior
       setCurrentWeekId(semanas[semanas.length - 2].id);
     }
   };
@@ -37,19 +39,14 @@ function MenuView() {
   const openModal = (weekId) => {
     setCurrentWeekId(weekId); 
     setShowModal(true);
+    setShowRecipeForm(false);
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setCurrentWeekId(null); 
-  };
-
-  const openRecommendations = () => {
-    setShowRecommendations(true);
-  };
-
-  const closeRecommendations = () => {
-    setShowRecommendations(false);
+    setShowRecipeForm(false);
+    setNewRecipeName('');
+    setIngredientsList([]);
   };
 
   const selectMenuOption = (option) => {
@@ -59,21 +56,13 @@ function MenuView() {
     closeModal();
   };
 
-  // Nueva función para agregar platillo de recomendaciones a la última semana modificada
-  const selectRecommendationOption = (option) => {
-    setSemanas(semanas.map((semana) =>
-      semana.id === currentWeekId ? { ...semana, menu: [...semana.menu, option] } : semana
-    ));
-    closeRecommendations();
-  };
-
   const removeMenuOption = (weekId, option) => {
     setSemanas(semanas.map((semana) =>
       semana.id === weekId
         ? { ...semana, menu: semana.menu.filter((dish) => dish !== option) }
         : semana
     ));
-    setCurrentWeekId(weekId);  // Actualiza la semana modificada
+    setCurrentWeekId(weekId);
   };
 
   const chunkWeeks = (weeks, size) => {
@@ -86,30 +75,52 @@ function MenuView() {
 
   const weekColumns = chunkWeeks(semanas, daysPerWeek);
 
-  const openShoppingList = () => {
-    setShowShoppingList(true);
+  const openRecipeForm = () => {
+    setShowRecipeForm(true);
   };
 
-  const closeShoppingList = () => {
-    setShowShoppingList(false);
+  const addIngredient = () => {
+    if (newIngredient) {
+      setIngredientsList([...ingredientsList, newIngredient]);
+      setNewIngredient('');
+    }
   };
 
-  const getWeeklyShoppingList = () => {
-    return weekColumns.map((week, index) => {
-      const weeklyIngredients = week.reduce((acc, day) => {
-        day.menu.forEach(dish => {
-          ingredients[dish].forEach(ingredient => {
-            acc[ingredient] = (acc[ingredient] || 0) + 1;
-          });
+  const saveNewRecipe = () => {
+    if (newRecipeName && ingredientsList.length) {
+      setMenuOptions([...menuOptions, newRecipeName]);
+      setIngredients({ ...ingredients, [newRecipeName]: ingredientsList });
+      closeModal();
+    }
+  };
+
+  const generateShoppingListPDF = () => {
+    const doc = new jsPDF();
+    let yPosition = 10;
+    doc.setFontSize(16);
+    doc.text('Lista de Compras', 10, yPosition);
+    yPosition += 10;
+
+    semanas.forEach((semana, semanaIndex) => {
+      doc.setFontSize(14);
+      doc.text(`Semana ${semanaIndex + 1}`, 10, yPosition);
+      yPosition += 8;
+
+      semana.menu.forEach((dish) => {
+        doc.setFontSize(12);
+        doc.text(`Día ${semana.id}: ${dish}`, 10, yPosition);
+        yPosition += 7;
+        ingredients[dish].forEach((ingredient) => {
+          doc.text(`- ${ingredient}`, 20, yPosition);
+          yPosition += 7;
         });
-        return acc;
-      }, {});
-
-      return { weekNumber: index + 1, ingredients: weeklyIngredients };
+        yPosition += 5;
+      });
+      yPosition += 5;
     });
-  };
 
-  const weeklyShoppingList = getWeeklyShoppingList();
+    doc.save('lista_de_compras.pdf');
+  };
 
   return (
     <div className="menu-view">
@@ -141,79 +152,93 @@ function MenuView() {
                         </button>
                       </div>
                     ))}
-                    <button className="add-more-button" onClick={() => openModal(semana.id)}>
-                      + Agregar otro platillo
-                    </button>
+                    <div className="action-buttons">
+                      <button className="add-more-button" onClick={() => openModal(semana.id)}>
+                        + Agregar otro platillo
+                      </button>
+                      <button className="delete-week-button" onClick={() => eliminarSemana(semana.id)}>
+                        Eliminar día
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <button className="add-menu-button" onClick={() => openModal(semana.id)}>
-                    +Agregar menú
-                  </button>
+                  <div className="action-buttons">
+                    <button className="add-menu-button" onClick={() => openModal(semana.id)}>
+                      +Agregar menú
+                    </button>
+                    <button className="delete-week-button" onClick={() => eliminarSemana(semana.id)}>
+                      Eliminar día
+                    </button>
+                  </div>
                 )}
-                
-                <button className="delete-week-button" onClick={() => eliminarSemana(semana.id)}>
-                  Eliminar
-                </button>
               </div>
             ))}
           </div>
         ))}
       </div>
 
-      <button className="shopping-list-button" onClick={openShoppingList}>Obtener lista de compras</button>
-
-      {/* Botón de recomendaciones */}
-      <button className="recommendations-button" onClick={openRecommendations}>Recomendaciones</button>
-
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Seleccionar menú:</h3>
-            <div className="menu-options">
-              {menuOptions.map((option, index) => (
-                <div key={index} className="menu-option" onClick={() => selectMenuOption(option)}>
-                  {option}
-                </div>
-              ))}
-            </div>
-            <button className="close-modal-button" onClick={closeModal}>Cerrar</button>
-          </div>
-        </div>
-      )}
-
-      {showRecommendations && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Recomendaciones:</h3>
-            <div className="menu-options">
-              {menuOptions.map((option, index) => (
-                <div key={index} className="menu-option" onClick={() => selectRecommendationOption(option)}>
-                  {option}
-                </div>
-              ))}
-            </div>
-            <button className="close-modal-button" onClick={closeRecommendations}>Cerrar</button>
-          </div>
-        </div>
-      )}
+      <button className="recommendations-button" onClick={() => setShowModal(true)}>Recomendaciones</button>
+      <button className="shopping-list-button" onClick={() => setShowShoppingList(true)}>Obtener lista de compras</button>
 
       {showShoppingList && (
         <div className="modal-overlay">
           <div className="modal shopping-list-modal">
-            <h3>Lista de Compras por Semana</h3>
-            <div className="shopping-list">
-              {weeklyShoppingList.map((week, index) => (
-                <div key={index} className="shopping-item">
-                  <h4>Semana {week.weekNumber}</h4>
-                  <ul>
-                    {Object.entries(week.ingredients).map(([ingredient, quantity], idx) => (
-                      <li key={idx}>{ingredient}: {quantity}</li>
-                    ))}
-                  </ul>
+            <h3>Lista de Compras</h3>
+            <button className="add-more-button list-download-button" onClick={generateShoppingListPDF}>
+              Descargar lista
+            </button>
+            <button className="close-modal-button" onClick={() => setShowShoppingList(false)}>Cerrar</button>
+          </div>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            {!showRecipeForm ? (
+              <>
+                <h3>Seleccionar menú:</h3>
+                <div className="menu-options">
+                  {menuOptions.map((option, index) => (
+                    <div key={index} className="menu-option" onClick={() => selectMenuOption(option)}>
+                      {option}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <button className="close-modal-button" onClick={closeShoppingList}>Cerrar</button>
+                <div className="modal-action-buttons">
+                  <button className="add-more-button" onClick={openRecipeForm}>
+                    + Crear nueva receta
+                  </button>
+                  <button className="close-modal-button" onClick={closeModal}>Cerrar</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3>Crear Nueva Receta</h3>
+                <input
+                  type="text"
+                  placeholder="Nombre de la receta"
+                  value={newRecipeName}
+                  onChange={(e) => setNewRecipeName(e.target.value)}
+                  className="input"
+                />
+                <input
+                  type="text"
+                  placeholder="Ingrediente"
+                  value={newIngredient}
+                  onChange={(e) => setNewIngredient(e.target.value)}
+                  className="input"
+                />
+                <button onClick={addIngredient} className="add-more-button">Agregar Ingrediente</button>
+                <ul>
+                  {ingredientsList.map((ingredient, index) => (
+                    <li key={index}>{ingredient}</li>
+                  ))}
+                </ul>
+                <button className="add-more-button" onClick={saveNewRecipe}>Guardar Receta</button>
+                <button className="close-modal-button" onClick={closeModal}>Cerrar</button>
+              </>
+            )}
           </div>
         </div>
       )}
