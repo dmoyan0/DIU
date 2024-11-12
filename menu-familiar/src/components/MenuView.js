@@ -19,6 +19,11 @@ function MenuView() {
     'Pasta': ['Pasta', 'Tomate', 'Queso', 'Aceite de oliva']
   });
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [showRecipeDetails, setShowRecipeDetails] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+
   const maxWeeks = 14;
   const daysPerWeek = 7;
 
@@ -47,6 +52,10 @@ function MenuView() {
     setShowRecipeForm(false);
     setNewRecipeName('');
     setIngredientsList([]);
+    setSearchQuery('');
+    setFilteredOptions([]);
+    setShowRecipeDetails(false);
+    setSelectedRecipe(null);
   };
 
   const selectMenuOption = (option) => {
@@ -122,12 +131,52 @@ function MenuView() {
     doc.save('lista_de_compras.pdf');
   };
 
+  const handleSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    if (query) {
+      const filtered = menuOptions.filter((option) =>
+        option.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredOptions(filtered);
+    } else {
+      setFilteredOptions([]);
+    }
+  };
+
+  const handleRecipeClick = (recipe) => {
+    setSelectedRecipe(recipe);
+    setShowRecipeDetails(true);
+  };
+
+  const closeRecipeDetails = () => {
+    setShowRecipeDetails(false);
+    setSelectedRecipe(null);
+  };
+
   return (
     <div className="menu-view">
       {semanas.length < maxWeeks && (
         <button className="add-week-button" onClick={AgregarSemana}>
           +Agregar Día
         </button>
+      )}
+
+      <input
+        type="text"
+        placeholder="Buscar receta..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+        className="input search-bar"
+      />
+      {filteredOptions.length > 0 && (
+        <div className="search-suggestions">
+          {filteredOptions.map((option, index) => (
+            <div key={index} className="menu-option" onClick={() => handleRecipeClick(option)}>
+              {option}
+            </div>
+          ))}
+        </div>
       )}
 
       <div className="week-container">
@@ -197,9 +246,16 @@ function MenuView() {
           <div className="modal">
             {!showRecipeForm ? (
               <>
-                <h3>Seleccionar menú:</h3>
+                <h3>Buscar Receta:</h3>
+                <input
+                  type="text"
+                  placeholder="Buscar receta"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="input"
+                />
                 <div className="menu-options">
-                  {menuOptions.map((option, index) => (
+                  {(filteredOptions.length > 0 ? filteredOptions : menuOptions).map((option, index) => (
                     <div key={index} className="menu-option" onClick={() => selectMenuOption(option)}>
                       {option}
                     </div>
@@ -214,7 +270,7 @@ function MenuView() {
               </>
             ) : (
               <>
-                <h3>Crear Nueva Receta</h3>
+                <h3>Nueva receta</h3>
                 <input
                   type="text"
                   placeholder="Nombre de la receta"
@@ -229,16 +285,34 @@ function MenuView() {
                   onChange={(e) => setNewIngredient(e.target.value)}
                   className="input"
                 />
-                <button onClick={addIngredient} className="add-more-button">Agregar Ingrediente</button>
+                <button className="add-more-button" onClick={addIngredient}>
+                  Agregar Ingrediente
+                </button>
                 <ul>
                   {ingredientsList.map((ingredient, index) => (
                     <li key={index}>{ingredient}</li>
                   ))}
                 </ul>
-                <button className="add-more-button" onClick={saveNewRecipe}>Guardar Receta</button>
-                <button className="close-modal-button" onClick={closeModal}>Cerrar</button>
+                <div className="modal-action-buttons">
+                  <button className="save-recipe-button" onClick={saveNewRecipe}>Guardar</button>
+                  <button className="close-modal-button" onClick={closeModal}>Cerrar</button>
+                </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {showRecipeDetails && selectedRecipe && (
+        <div className="modal-overlay">
+          <div className="modal recipe-details-modal">
+            <h3>{selectedRecipe}</h3>
+            <ul>
+              {ingredients[selectedRecipe]?.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+              ))}
+            </ul>
+            <button className="close-modal-button" onClick={closeRecipeDetails}>Cerrar</button>
           </div>
         </div>
       )}

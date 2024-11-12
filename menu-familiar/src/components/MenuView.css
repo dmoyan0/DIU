@@ -15,7 +15,7 @@
 .add-menu-button,
 .shopping-list-button,
 .recommendations-button {
-  background-color: #b24e4e;
+  background-color: #4CAF50;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -236,4 +236,32 @@
 
 .delete-week-button:hover {
   background-color: #c9302c;
+}
+
+.search-bar {
+  width: 300px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.search-suggestions {
+  background-color: #eee;
+  width: 300px;
+  border-radius: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.suggestion {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+}
+
+.suggestion:hover {
+  background-color: #ddd;
 }
