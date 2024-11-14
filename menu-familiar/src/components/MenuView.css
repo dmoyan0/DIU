@@ -1,12 +1,12 @@
 /* Estilos iniciales */
 .menu-view {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
   background-color: #282c34;
   color: #fff;
-  height: 100vh;
 }
 
 /* Botones principales */
