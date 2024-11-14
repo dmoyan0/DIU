@@ -343,7 +343,7 @@ function MenuView() {
                   ))}
                 </ul>
                 <div className="modal-action-buttons">
-                  <button className="save-recipe-button" onClick={saveNewRecipe}>Guardar</button>
+                  <button className="add-week-button" onClick={saveNewRecipe}>Guardar</button>
                   <button className="close-modal-button" onClick={closeModal}>Cerrar</button>
                 </div>
               </>
