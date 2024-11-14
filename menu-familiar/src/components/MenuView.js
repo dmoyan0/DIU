@@ -11,13 +11,32 @@ function MenuView() {
   const [ingredientsList, setIngredientsList] = useState([]);
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [currentWeekId, setCurrentWeekId] = useState(1);
-  const [menuOptions, setMenuOptions] = useState(['Arroz con pollo y ensalada', 'Lentejas con arroz', 'Tacos', 'Pasta']);
+  const [menuOptions, setMenuOptions] = useState([
+    'Arroz con pollo y ensalada',
+    'Lentejas con arroz',
+    'Tacos',
+    'Pasta',
+    'Pizza',
+    'Sopa de verduras',
+    'Hamburguesa',
+    'Ensalada César',
+    'Sushi',
+    'Empanadas'
+  ]);
+  
   const [ingredients, setIngredients] = useState({
     'Arroz con pollo y ensalada': ['Arroz', 'Pollo', 'Lechuga', 'Tomate'],
     'Lentejas con arroz': ['Lentejas', 'Arroz', 'Cebolla', 'Ajo'],
     'Tacos': ['Tortillas', 'Carne', 'Queso', 'Lechuga', 'Tomate'],
-    'Pasta': ['Pasta', 'Tomate', 'Queso', 'Aceite de oliva']
+    'Pasta': ['Pasta', 'Tomate', 'Queso', 'Aceite de oliva'],
+    'Pizza': ['Masa', 'Tomate', 'Queso', 'Orégano'],
+    'Sopa de verduras': ['Zanahoria', 'Papa', 'Cebolla', 'Ajo', 'Apio'],
+    'Hamburguesa': ['Pan', 'Carne', 'Lechuga', 'Tomate', 'Queso'],
+    'Ensalada César': ['Lechuga', 'Pollo', 'Queso', 'Aderezo César', 'Pan tostado'],
+    'Sushi': ['Arroz', 'Pescado', 'Alga nori', 'Pepino', 'Aguacate'],
+    'Empanadas': ['Masa', 'Carne', 'Cebolla', 'Pimentón', 'Huevo']
   });
+  
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredOptions, setFilteredOptions] = useState([]);
@@ -106,30 +125,60 @@ function MenuView() {
   const generateShoppingListPDF = () => {
     const doc = new jsPDF();
     let yPosition = 10;
+    const pageHeight = doc.internal.pageSize.height;
+
     doc.setFontSize(16);
     doc.text('Lista de Compras', 10, yPosition);
     yPosition += 10;
 
-    semanas.forEach((semana, semanaIndex) => {
-      doc.setFontSize(14);
-      doc.text(`Semana ${semanaIndex + 1}`, 10, yPosition);
-      yPosition += 8;
+    let weekCount = 1;
+    let dayCount = 1;
 
-      semana.menu.forEach((dish) => {
+    doc.setFontSize(14);
+    doc.text(`Semana ${weekCount}`, 10, yPosition);
+    yPosition += 8;
+
+    semanas.forEach((semana) => {
+        if (dayCount > 7) {
+            // Nueva semana después de cada 7 días
+            weekCount += 1;
+            dayCount = 1;
+            yPosition += 5;
+
+            // Verificación de espacio en la página antes de agregar el texto
+            if (yPosition > pageHeight - 20) {
+                doc.addPage();
+                yPosition = 10;
+            }
+            doc.text(`Semana ${weekCount}`, 10, yPosition);
+            yPosition += 8;
+        }
+
+        // Agrupa las recetas de un mismo día en una sola línea
+        const dishes = semana.menu.join(", ");
         doc.setFontSize(12);
-        doc.text(`Día ${semana.id}: ${dish}`, 10, yPosition);
+        doc.text(`Día ${dayCount}: ${dishes}`, 10, yPosition);
         yPosition += 7;
-        ingredients[dish].forEach((ingredient) => {
-          doc.text(`- ${ingredient}`, 20, yPosition);
-          yPosition += 7;
+
+        // Agrega los ingredientes de las recetas
+        semana.menu.forEach((dish) => {
+            ingredients[dish].forEach((ingredient) => {
+                // Verificación de espacio en la página antes de agregar el ingrediente
+                if (yPosition > pageHeight - 20) {
+                    doc.addPage();
+                    yPosition = 10;
+                }
+                doc.text(`- ${ingredient}`, 20, yPosition);
+                yPosition += 7;
+            });
         });
+
         yPosition += 5;
-      });
-      yPosition += 5;
+        dayCount += 1;
     });
 
     doc.save('lista_de_compras.pdf');
-  };
+};
 
   const handleSearchChange = (event) => {
     const query = event.target.value;
