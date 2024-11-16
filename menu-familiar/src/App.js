@@ -32,6 +32,19 @@ function App() {
                     </Link>
                   </div>
                 </div>
+                <div className="what-is-it">
+                  <h2>Presentación</h2>
+                  <p>
+                    Organizar las comidas semanales y hacer las compras de alimentos puede ser una tarea desafiante y muchas veces estresante, especialmente cuando el tiempo es limitado. En Menú Familiar, hemos creado una solución simple y eficiente para ayudarte a planificar tus menús semanales y generar listas de compras personalizadas según tus preferencias.
+                  </p>
+                  <p>
+                    Nuestra plataforma te permite armar tu menú a medida, ahorrar tiempo y optimizar tus compras de ingredientes, todo en un solo lugar. Ya sea que busques recetas rápidas o comidas familiares completas, nuestra herramienta   está diseñada para que puedas disfrutar de una experiencia culinaria sin complicaciones.
+                  </p>
+                  <p>
+                    ¡Empieza ahora y lleva la planificación de tus comidas al siguiente nivel!
+                  </p>
+
+                </div>
               </div>
             }
           />

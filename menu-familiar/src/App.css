@@ -17,15 +17,19 @@
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column; /* Para organizar los elementos en columna */
+  align-items: center; /* Centra los elementos horizontalmente */
+  justify-content: center; /* Centra los elementos verticalmente */
   color: white;
+  padding: 20px; /* Espacio adicional */
 }
 
 .home-content {
   display: flex;
   width: 80%;
   max-width: 1200px;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-section {
@@ -42,7 +46,7 @@
   justify-content: center;
   padding: 20px;
   color: white;
-  background-color: rgba(40, 44, 52, 0.85); /* Fondo ligeramente opaco */
+  background-color: rgba(40, 44, 52, 0.85);
   border-radius: 10px;
   margin-left: 20px;
 }
@@ -69,6 +73,18 @@
 
 .start-button:hover {
   background-color: #a43e3e;
+}
+
+.what-is-it {
+  width: 80%;
+  max-width: 1080px;
+  margin-top: 40px;
+  padding: 40px;  /* Aseguramos que haya espacio dentro del rectángulo */
+  text-align: justify;
+  background-color: #373737;  /* Color de fondo del rectángulo */
+  border-radius: 10px;  /* Opcional: bordes redondeados */
+  color: white;
+  position: relative;  /* Necesario si agregamos un rectángulo detrás */
 }
 
 body {
