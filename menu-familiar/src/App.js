@@ -23,8 +23,7 @@ function App() {
                     <img src={nuevaImagen} className="App-logo" alt="logo" />
                   </div>
                   <div className="info-section">
-                    <h1>Bienvenido! 
-                      Arma tu menú a tu gusto</h1>
+                    <h1>Bienvenido! Arma tu menú a tu gusto</h1>
                     <p>
                       ¡Planifica tus comidas sin estrés y ahorra tiempo con Menú Familiar! Empieza hoy y descubre lo fácil que puede ser organizar tu semana.
                     </p>
